@@ -3,5 +3,5 @@ Steps to run this:
 
 
 Note:
-1. Each Memeber can be part of only 1 team
+1. Each Member can be part of only 1 team
 2. If team is deleted, all the members present in member table will be deleted.
