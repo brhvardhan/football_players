@@ -1,6 +1,5 @@
 import sys
 import asyncio
-import pytest
 from fastapi.testclient import TestClient
 from main import app
 
@@ -54,7 +53,6 @@ class TestMember:
         member_id = self.create_member()
         self.update_member(member_id)
         self.delete_member(member_id)
-        
 
     def create_member(self):
         dummy_body = {
@@ -90,7 +88,7 @@ class TestMember:
         assert response_body['team_id'] > 0
         assert response_body['id'] > 0
 
-    def delete_member(self,member_id):
+    def delete_member(self, member_id):
         response = client.delete("/player/{id}".format(id=member_id))
         assert response.status_code == 204
         response = client.get("/player/{id}".format(id=member_id))
