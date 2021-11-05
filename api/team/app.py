@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import APIRouter, Query
 from sqlalchemy import func
 from sqlalchemy.sql.expression import desc, select
@@ -5,11 +6,12 @@ from sqlalchemy.sql.sqltypes import Enum
 
 from handlers.db.connect import async_session
 from handlers.db.schema import Team, Member
+from handlers.db.models import AvgAgeOutput
 
 
 router = APIRouter()
 
-@router.get("/average_age")
+@router.get("/average_age", response_model=Optional[List[AvgAgeOutput]])
 async def get_average_age(order:str=Query('asc', enum=['asc','desc'], description='Order in Asc or Desc'), ):
     async with async_session() as session :
         async with session.begin():

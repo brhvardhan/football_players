@@ -22,7 +22,7 @@ class MembersCRUD():
         await self.db_session.commit()
         return member
 
-    async def get_memeber(self, id:int) -> Member:
+    async def get_member(self, id:int) -> Member:
         query_obj = await self.db_session.execute(select(Member).where(Member.id == id).options(joinedload('team')))
         res = query_obj.scalars().one_or_none()
         if not res:
@@ -30,10 +30,7 @@ class MembersCRUD():
         return res
         
     async def update_member(self, id:int, name: Optional[str], age: Optional[int], team_id:Optional[int]):
-        query_obj = await self.db_session.execute(select(Member).where(Member.id == id))
-        row: Optional[Member] = query_obj.scalars().one_or_none()
-        if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Member not found")
+        row = await self.get_member(id)
         if name:
             row.name = name
         if age:
@@ -45,6 +42,6 @@ class MembersCRUD():
         return JSONResponse(content={"detail":"Record Updated Successfully."}, status_code=status.HTTP_200_OK)
 
     async def delete_member(self, id: int):
-        query_obj = delete(Member).where(Member.id == id)
-        await self.db_session.execute(query_obj)
+        row = await self.get_member(id)
+        await self.db_session.delete(row)
         return HTMLResponse(status_code=status.HTTP_204_NO_CONTENT)

@@ -3,6 +3,7 @@ from fastapi import APIRouter, status
 from fastapi.param_functions import Depends
 
 from handlers.db.connect import async_session
+from handlers.db.models import UpdateMember
 from .methods import MembersCRUD
 
 
@@ -17,11 +18,11 @@ router = APIRouter()
 
 @router.get("/{id}")
 async def get_player(id:int, member_obj: MembersCRUD = Depends(get_members_obj)):
-        return await member_obj.get_memeber(id)
+        return await member_obj.get_member(id)
 
 @router.put("/{id}")
-async def update_player(id:int, name: Optional[str]=None, age:Optional[int]=None, team_id:Optional[int]=None, member_obj: MembersCRUD = Depends(get_members_obj)):
-        return await member_obj.update_member(id, name, age, team_id)
+async def update_player(id:int, details:UpdateMember, member_obj: MembersCRUD = Depends(get_members_obj)):
+        return await member_obj.update_member(id, details.name, details.age, details.team_id)
 
 @router.delete("/{id}")
 async def delete_player(id:int, member_obj: MembersCRUD = Depends(get_members_obj)):
